@@ -1,0 +1,56 @@
+<!-- 轮播图 -->
+<swiper class="slides" indicator-dots indicator-color="#bcc0c9" indicator-active-color="#3a4861">
+  <swiper-item wx:key="*this" wx:for="{{tools.slice(info.images)}}">
+    <image src="{{item}}" mode="aspectFill"/>
+  </swiper-item>
+</swiper>
+
+<!-- 商铺信息 -->
+<view class="heading">
+  <text class="name">{{info.name}}</text>
+  <text class="phone">电话：{{info.phone}}</text>
+  <text class="address">地址：{{info.address}}</text>
+  <text class="hours">营业时间：{{info.businessHours}}</text>
+  <view class="score">{{info.score}}分</view>
+</view>
+
+<!-- 评论数据 -->
+<view class="comments">
+  <view class="item" wx:for="{{info.comments}}" wx:key="name">
+    <text class="name">{{item.name}}</text>
+    <text class="date">{{item.date}}</text>
+    <text class="rating">{{item.rating}}</text>
+    <text class="content">{{item.content}}</text>
+    <view class="images">
+    <!-- http://p0.meituan.net/w.h/shaitu/dc210667f0d2814a1883239f3c991bc6302994.jpg -->
+    <!-- http://p0.meituan.net/110.110/shaitu/dc210667f0d2814a1883239f3c991bc6302994.jpg -->
+    <!-- 我们需要对图片的地址做处理，把w.h替换对应的宽度和高度 110*110 -->
+    <!-- 在小程序的{{}}里面不允许调用 js 的方法 -->
+    <!-- 但是，可以在小程序的{{}}里面调用 wxs 提供的方法 -->
+    <!-- 自定义属性 data-current data-urls 在预览的时候使用 -->
+      <image data-current="{{img}}" data-urls="{{item.images}}" bindtap='preview' wx:for="{{item.images}}" wx:key="*this" wx:for-item="img" src="{{tools.replace(img)}}"/>
+    </view>
+  </view>
+</view>
+
+<!-- 定义 wxs(WeiXin Script) -->
+<!-- 是小程序的脚本语言，结合 WXML 可以构建出页面的结构 -->
+<!-- 和 JavaScript 是隔离的，不能调用JS提供的函数，也不能调用小程序提供的API -->
+<wxs module="tools">
+  function replace(str) {
+    return str.replace('w.h', '110.110')
+  }
+  function slice(arr) {
+    // arr有可能是个undefined
+    if (arr && arr.length >= 6) {
+      return arr.slice(0, 6)
+    } else {
+      return arr
+    }
+  }
+  // 导出方法
+  module.exports = {
+    replace: replace,
+    slice: slice
+  }
+</wxs>
